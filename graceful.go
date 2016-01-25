@@ -88,7 +88,21 @@ func Run(addr string, timeout time.Duration, n http.Handler) {
 			logger.Fatal(err)
 		}
 	}
+}
 
+func Run2(addr string, timeout time.Duration, n http.Handler) (srv *Server) {
+	srv = &Server{
+		Timeout: timeout,
+		Server:  &http.Server{Addr: addr, Handler: n},
+	}
+
+	if err := srv.ListenAndServe(); err != nil {
+		if opErr, ok := err.(*net.OpError); !ok || (ok && opErr.Op != "accept") {
+			logger := log.New(os.Stdout, "[graceful] ", 0)
+			logger.Fatal(err)
+		}
+	}
+	return
 }
 
 // ListenAndServe is equivalent to http.Server.ListenAndServe with graceful shutdown enabled.
