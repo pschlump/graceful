@@ -92,8 +92,9 @@ func Run(addr string, timeout time.Duration, n http.Handler) {
 
 func Run2(addr string, timeout time.Duration, n http.Handler) (srv *Server) {
 	srv = &Server{
-		Timeout: timeout,
-		Server:  &http.Server{Addr: addr, Handler: n},
+		Timeout:          timeout,
+		Server:           &http.Server{Addr: addr, Handler: n},
+		NoSignalHandling: true,
 	}
 
 	if err := srv.ListenAndServe(); err != nil {
